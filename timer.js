@@ -13,9 +13,11 @@ function two_digit(number) {
 
 $(document).ready(function () {
     var audio = new Audio('assets/Allemande.ogg')
+
     var hours = 0
     var minutes = 0
     var seconds = 0
+
     var input = '500'
 
     var updateTimer = function () {
@@ -72,23 +74,27 @@ $(document).ready(function () {
 
     $(document).keydown(function (e) {
         //console.log(e.keyCode)
+
+        // Enter key has been pressed, start countdown timer
         if (e.keyCode === 13) {
             input = ''
         }
+        // Backspace key pressed, don't go back in browser history
         else if (e.keyCode === 8) {
             e.preventDefault()
             input = input.slice(0,input.length-1)
         }
+        // If top row number keys are pressed, start setting timer
         else if (e.keyCode >= 48 && e.keyCode <= 57) {
             input += (e.keyCode - 48)
         }
+        // If number pad keys are pressed, start setting timer
         else if (e.keyCode >= 96 && e.keyCode <= 105) {
             input += (e.keyCode - 96)
         }
 
+        // TODO: Too much state manipulation, more functional programming
         updateTimer()
-
-        console.log(e.keyCode)
     })
 })
 
