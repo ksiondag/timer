@@ -11,63 +11,89 @@ function two_digit(number) {
     return zero_fill(2,number)
 }
 
-$(document).ready(function () {
-    var audio = new Audio('assets/Allemande.ogg')
+function timerParse(input) {
+    var parse = zero_fill(6,input)
 
-    var hours = 0
-    var minutes = 0
+    return {
+        seconds: Number(parse.slice(4,6)),
+        minutes: Number(parse.slice(2,4)),
+        hours: Number(parse.slice(0,2))
+    }
+}
+
+function audioAssets() {
+    var audio = {
+        allemande: new Audio('assets/Allemande.ogg'),
+        tenMinutes: new Audio('assets/10m_remaining.ogg'),
+        fiveMinutes: new Audio('assets/5m_remaining.ogg'),
+        oneMinute: new Audio('assets/1m_remaining.ogg'),
+        thirtySeconds: new Audio('assets/30s_remaining.ogg'),
+        finalCountdown: new Audio('assets/final_countdown.ogg')
+    }
+
+    for (var asset in audio) {
+        audio[asset].load()
+    }
+
+    return audio
+}
+
+$(document).ready(function () {
+    var audio = audioAssets()
+
     var seconds = 0
 
     var input = '500'
 
     var updateTimer = function () {
         if (input) {
-            var parse = zero_fill(6,input)
-            seconds = Number(parse.slice(4,6))
-            minutes = Number(parse.slice(2,4))
-            hours = Number(parse.slice(0,2))
+            var timer = timerParse(input)
+            $('#hours').html(two_digit(timer.hours))
+            $('#minutes').html(two_digit(timer.minutes))
+            $('#seconds').html(two_digit(timer.seconds))
+            $(document).attr('title', $('#hours').html()+':'+$('#minutes').html()+':'+$('#seconds').html())
         }
 
-        $('#hours').html(two_digit(hours))
-        $('#minutes').html(two_digit(minutes))
-        $('#seconds').html(two_digit(seconds))
-        $(document).attr('title', $('#hours').html()+':'+$('#minutes').html()+':'+$('#seconds').html())
+        else {
+            $('#hours').html(two_digit(Math.floor(seconds/3600)))
+            $('#minutes').html(two_digit(Math.floor((seconds%3600)/60)))
+            $('#seconds').html(two_digit(seconds%60))
+            $(document).attr('title', $('#hours').html()+':'+$('#minutes').html()+':'+$('#seconds').html())
+        }
     }
 
     setInterval(function() {
         if (!input) {
-            if (seconds > 59) {
-                seconds -= 60
-                minutes += 1
+            if (seconds <= 1) {
+                audio.allemande.play()
+                seconds = 1
             }
-            if (minutes > 59) {
-                minutes -= 60
-                hours += 1
+            else if (seconds === 10+1) {
+                audio.finalCountdown.play()
             }
-            if (seconds > 0) {
-                seconds -= 1
+            else if (seconds === 30+1) {
+                audio.thirtySeconds.play()
             }
-            else if (minutes > 0) {
-                seconds = 59
-                minutes -= 1
+            else if (seconds === 60+1) {
+                audio.oneMinute.play()
             }
-            else if (hours > 0) {
-                seconds = 59
-                minutes = 59
-                hours -= 1
+            else if (seconds === 5*60+1) {
+                audio.fiveMinutes.play()
             }
-
-            if (seconds === 0 && minutes === 0 && hours === 0) {
-                audio.play()
+            else if (seconds === 10*60+1) {
+                audio.tenMinutes.play()
             }
             else {
-                audio.pause()
-                audio.currentTime = 0
+                audio.allemande.pause()
+                audio.allemande.currentTime = 0
             }
+            seconds -= 1
         }
         else {
-            audio.pause()
-            audio.currentTime = 0
+            for (var asset in audio) {
+                audio[asset].pause()
+                audio[asset].currentTime = 0
+            }
         }
         updateTimer()
     }, 1000)
@@ -77,6 +103,11 @@ $(document).ready(function () {
 
         // Enter key has been pressed, start countdown timer
         if (e.keyCode === 13) {
+            var timer = timerParse(input)
+            seconds = timer.seconds
+            seconds += timer.minutes*60
+            seconds += timer.hours*3600
+
             input = ''
         }
         // Backspace key pressed, don't go back in browser history
