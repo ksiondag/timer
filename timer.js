@@ -1,3 +1,6 @@
+// TODO: Take jQuery out
+// It's a thing I assumed I needed just cause, but I don't think I do
+// Don't add libraries unless necessary!
 
 function zero_fill(length, number) {
     var number_string = '' + number
@@ -38,7 +41,7 @@ function audioAssets() {
     return audio
 }
 
-$(document).ready(function () {
+window.onload = function () {
     var audio = audioAssets()
 
     var seconds = 0
@@ -48,17 +51,32 @@ $(document).ready(function () {
     var updateTimer = function () {
         if (input) {
             var timer = timerParse(input)
-            $('#hours').html(two_digit(timer.hours))
-            $('#minutes').html(two_digit(timer.minutes))
-            $('#seconds').html(two_digit(timer.seconds))
-            $(document).attr('title', $('#hours').html()+':'+$('#minutes').html()+':'+$('#seconds').html())
+
+            var htmlHours = two_digit(timer.hours)
+            document.getElementById('hours').innerHTML = htmlHours
+            document.title = htmlHours + ':'
+
+            var htmlMinutes = two_digit(timer.minutes)
+            document.getElementById('minutes').innerHTML = htmlMinutes
+            document.title += htmlMinutes + ':'
+
+            var htmlSeconds = two_digit(timer.seconds)
+            document.getElementById('seconds').innerHTML = htmlSeconds
+            document.title += htmlSeconds
         }
 
         else {
-            $('#hours').html(two_digit(Math.floor(seconds/3600)))
-            $('#minutes').html(two_digit(Math.floor((seconds%3600)/60)))
-            $('#seconds').html(two_digit(seconds%60))
-            $(document).attr('title', $('#hours').html()+':'+$('#minutes').html()+':'+$('#seconds').html())
+            var htmlHours = two_digit(Math.floor(seconds/3600))
+            document.getElementById('hours').innerHTML = htmlHours
+            document.title = htmlHours + ':'
+
+            var htmlMinutes = two_digit(Math.floor((seconds%3600)/60))
+            document.getElementById('minutes').innerHTML = htmlMinutes
+            document.title += htmlMinutes + ':'
+
+            var htmlSeconds = two_digit(seconds%60)
+            document.getElementById('seconds').innerHTML = htmlSeconds
+            document.title += htmlSeconds
         }
     }
 
@@ -68,6 +86,8 @@ $(document).ready(function () {
                 audio.allemande.play()
                 seconds = 1
             }
+            // TODO: only excute if audio cues turned on
+            /*
             else if (seconds === 10+1) {
                 audio.finalCountdown.play()
             }
@@ -83,6 +103,7 @@ $(document).ready(function () {
             else if (seconds === 10*60+1) {
                 audio.tenMinutes.play()
             }
+            */
             else {
                 audio.allemande.pause()
                 audio.allemande.currentTime = 0
@@ -98,7 +119,7 @@ $(document).ready(function () {
         updateTimer()
     }, 1000)
 
-    $(document).keydown(function (e) {
+    document.addEventListener("keydown", function (e) {
         //console.log(e.keyCode)
 
         // Enter key has been pressed, start countdown timer
@@ -127,5 +148,5 @@ $(document).ready(function () {
         // TODO: Too much state manipulation, more functional programming
         updateTimer()
     })
-})
+}
 
