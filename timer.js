@@ -114,37 +114,34 @@ function audioAssets () {
     return audio
 }
 
+function playAudioCue (audio, seconds, alarmAtSecond, id) {
+    var checkbox = document.getElementById(id)
+
+    if (checkbox.checked && seconds === alarmAtSecond) {
+        audio[id].play()
+    }
+}
+
 function setupAlarm () {
     var audio = audioAssets()
 
     return {
         play: function (seconds) {
+            // Final alarm playing edge case logic
             if (seconds <= 0) {
-                audio.allemande.play()
                 seconds = 0
             }
-            /*
-            // TODO: only excute if audio cues turned on
-            else if (seconds === 10) {
-                audio.finalCountdown.play()
-            }
-            else if (seconds === 30) {
-                audio.thirtySeconds.play()
-            }
-            else if (seconds === 60) {
-                audio.oneMinute.play()
-            }
-            else if (seconds === 5*60) {
-                audio.fiveMinutes.play()
-            }
-            else if (seconds === 10*60) {
-                audio.tenMinutes.play()
-            }
-            */
             else {
                 audio.allemande.pause()
                 audio.allemande.currentTime = 0
             }
+
+            playAudioCue(audio, seconds, 0, 'allemande')
+            playAudioCue(audio, seconds, 10, 'finalCountdown')
+            playAudioCue(audio, seconds, 30, 'thirtySeconds')
+            playAudioCue(audio, seconds, 60, 'oneMinute')
+            playAudioCue(audio, seconds, 300, 'fiveMinutes')
+            playAudioCue(audio, seconds, 600, 'tenMinutes')
         },
         stop: function () {
             for (var asset in audio) {
