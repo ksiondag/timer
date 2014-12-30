@@ -102,6 +102,9 @@ function startOrPause (timer) {
 function timerInput (timer, keyInput) {
     stopTimer(timer)
     timer.input += keyInput
+    while (timer.input.length > 6) {
+        timer.input = timer.input.slice(1,timer.input.length)
+    }
     displayTimer(inputParse(timer.input))
 }
 
@@ -182,6 +185,7 @@ window.onload = function () {
         else if (e.keyCode === 8) {
             e.preventDefault()
             timer.input = timer.input.slice(0,timer.input.length-1)
+            displayTimer(inputParse(timer.input))
         }
 
         // If top row number keys are pressed, start setting timer
