@@ -11,7 +11,15 @@ function two_digit (number) {
     return zero_fill(2,number)
 }
 
-function timerParse (input) {
+function secondsParse (seconds) {
+    return {
+        seconds: seconds%60,
+        minutes: Math.floor((seconds%3600)/60),
+        hours: Math.floor(seconds/3600)
+    }
+}
+
+function inputParse (input) {
     var parse = zero_fill(6,input)
 
     return {
@@ -22,7 +30,7 @@ function timerParse (input) {
 }
 
 function hhmmssToSeconds (hhmmss) {
-    var timer = timerParse(hhmmss)
+    var timer = inputParse(hhmmss)
     seconds = timer.seconds
     seconds += timer.minutes*60
     seconds += timer.hours*3600
@@ -34,16 +42,16 @@ function currentTime () {
     return Math.floor(new Date().getTime()/1000)
 }
 
-function displayTimer (seconds) {
-    var htmlHours = two_digit(Math.floor(seconds/3600))
+function displayTimer (timer) {
+    var htmlHours = two_digit(timer.hours)
     document.getElementById('hours').innerHTML = htmlHours
     document.title = htmlHours + ':'
 
-    var htmlMinutes = two_digit(Math.floor((seconds%3600)/60))
+    var htmlMinutes = two_digit(timer.minutes)
     document.getElementById('minutes').innerHTML = htmlMinutes
     document.title += htmlMinutes + ':'
 
-    var htmlSeconds = two_digit(seconds%60)
+    var htmlSeconds = two_digit(timer.seconds)
     document.getElementById('seconds').innerHTML = htmlSeconds
     document.title += htmlSeconds
 }
@@ -57,7 +65,7 @@ function countdown (expiresAt) {
         }
 
         alarm.play(seconds)
-        displayTimer(seconds)
+        displayTimer(secondsParse(seconds))
     }
 
     return updateOnSecond
@@ -94,7 +102,7 @@ function startOrPause (timer) {
 function timerInput (timer, keyInput) {
     stopTimer(timer)
     timer.input += keyInput
-    displayTimer(hhmmssToSeconds(timer.input))
+    displayTimer(inputParse(timer.input))
 }
 
 function audioAssets () {
@@ -163,7 +171,7 @@ window.onload = function () {
         countdownID: -1,
         input: ''
     }
-    displayTimer(5*60)
+    displayTimer(secondsParse(timer.remaining))
     document.addEventListener('keydown', function (e) {
         // Enter key has been pressed, start/pause countdown timer
         if (e.keyCode === 13 || e.keyCode === 32) {
