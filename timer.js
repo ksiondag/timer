@@ -110,7 +110,8 @@ function timerInput (timer, keyInput) {
 
 function audioAssets () {
     var audio = {
-        allemande: new Audio('assets/Allemande.ogg'),
+        //allemande: new Audio('assets/Allemande.ogg'),
+        allemande: youtubePlayer(),
         tenMinutes: new Audio('assets/10m_remaining.ogg'),
         fiveMinutes: new Audio('assets/5m_remaining.ogg'),
         oneMinute: new Audio('assets/1m_remaining.ogg'),
