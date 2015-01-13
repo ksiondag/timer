@@ -1,6 +1,6 @@
 /*jslint browser: true */
 'use strict';
-var zero_fill = function (length, number) {
+var zeroFill = function (length, number) {
     var number_string = String(number);
     while (number_string.length < length) {
         number_string = '0' + number_string;
@@ -8,8 +8,8 @@ var zero_fill = function (length, number) {
     return number_string;
 };
 
-var two_digit = function (number) {
-    return zero_fill(2, number);
+var twoDigit = function (number) {
+    return zeroFill(2, number);
 };
 
 var secondsParse = function (seconds) {
@@ -21,7 +21,7 @@ var secondsParse = function (seconds) {
 };
 
 var inputParse = function (input) {
-    var parse = zero_fill(6, input);
+    var parse = zeroFill(6, input);
 
     return {
         seconds: Number(parse.slice(4, 6)),
@@ -49,15 +49,15 @@ var currentTime = function () {
 var displayTimer = function (timer) {
     var htmlHours, htmlMinutes, htmlSeconds;
 
-    htmlHours = two_digit(timer.hours);
+    htmlHours = twoDigit(timer.hours);
     document.getElementById('hours').innerHTML = htmlHours;
     document.title = htmlHours + ':';
 
-    htmlMinutes = two_digit(timer.minutes);
+    htmlMinutes = twoDigit(timer.minutes);
     document.getElementById('minutes').innerHTML = htmlMinutes;
     document.title += htmlMinutes + ':';
 
-    htmlSeconds = two_digit(timer.seconds);
+    htmlSeconds = twoDigit(timer.seconds);
     document.getElementById('seconds').innerHTML = htmlSeconds;
     document.title += htmlSeconds;
 };
@@ -67,8 +67,8 @@ var audioAssets = function () {
     var audio, asset;
 
     audio = {
-        allemande: new Audio('assets/Allemande.ogg'),
-        //allemande: youtubePlayer(),
+        expiredTimer: new Audio('assets/Allemande.ogg'),
+        //expiredTimer: youtubePlayer(),
         tenMinutes: new Audio('assets/10m_remaining.ogg'),
         fiveMinutes: new Audio('assets/5m_remaining.ogg'),
         oneMinute: new Audio('assets/1m_remaining.ogg'),
@@ -102,11 +102,11 @@ var setupAlarm = function () {
             if (seconds <= 0) {
                 seconds = 0;
             } else {
-                audio.allemande.pause();
-                audio.allemande.currentTime = 0;
+                audio.expiredTimer.pause();
+                audio.expiredTimer.currentTime = 0;
             }
 
-            playAudioCue(audio, seconds, 0, 'allemande');
+            playAudioCue(audio, seconds, 0, 'expiredTimer');
             playAudioCue(audio, seconds, 10, 'finalCountdown');
             playAudioCue(audio, seconds, 30, 'thirtySeconds');
             playAudioCue(audio, seconds, 60, 'oneMinute');
