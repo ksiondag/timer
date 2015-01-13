@@ -143,7 +143,7 @@ var countdown = function (timer) {
         if (seconds <= 0) {
             seconds = 0;
             stopTimer(timer);
-            setTimeout(stopTimer, 5000, timer);
+            //setTimeout(stopTimer, 5000, timer);
         }
 
         alarm.play(seconds);
