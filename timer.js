@@ -67,7 +67,7 @@ var audioAssets = function () {
     var audio, asset;
 
     audio = {
-        expiredTimer: new Audio('assets/Allemande.ogg'),
+        expiredTimer: new Audio('assets/expiredTimer.ogg'),
         //expiredTimer: youtubePlayer(),
         tenMinutes: new Audio('assets/10m_remaining.ogg'),
         fiveMinutes: new Audio('assets/5m_remaining.ogg'),
