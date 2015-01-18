@@ -89,6 +89,7 @@ var playAudioCue = function (audio, seconds, alarmAtSecond, id) {
     var checkbox = document.getElementById(id);
 
     if (checkbox.checked && seconds === alarmAtSecond) {
+        audio[id].currentTime = 0;
         audio[id].play();
     }
 };
@@ -98,14 +99,6 @@ var setupAlarm = function () {
 
     return {
         play: function (seconds) {
-            // Final alarm playing edge case logic
-            if (seconds <= 0) {
-                seconds = 0;
-            } else {
-                audio.expiredTimer.pause();
-                audio.expiredTimer.currentTime = 0;
-            }
-
             playAudioCue(audio, seconds, 0, 'expiredTimer');
             playAudioCue(audio, seconds, 10, 'finalCountdown');
             playAudioCue(audio, seconds, 30, 'thirtySeconds');
@@ -113,12 +106,15 @@ var setupAlarm = function () {
             playAudioCue(audio, seconds, 300, 'fiveMinutes');
             playAudioCue(audio, seconds, 600, 'tenMinutes');
         },
-        stop: function () {
+        stop: function (audioName) {
             var asset;
-            for (asset in audio) {
-                if (audio.hasOwnProperty(asset)) {
-                    audio[asset].pause();
-                    audio[asset].currentTime = 0;
+            if (audio.hasOwnProperty(audioName)) {
+                audio[audioName].pause();
+            } else if (audioName === undefined) {
+                for (asset in audio) {
+                    if (audio.hasOwnProperty(asset)) {
+                        audio[asset].pause();
+                    }
                 }
             }
         }
@@ -128,10 +124,21 @@ var setupAlarm = function () {
 var alarm = setupAlarm();
 
 var stopTimer = function (timer) {
-    alarm.stop();
-    if (timer.countdownID !== -1) {
-        clearInterval(timer.countdownID);
-        timer.countdownID = -1;
+    clearInterval(timer.countdownID);
+    timer.countdownID = -1;
+};
+
+var repeatTimer = function (timer) {
+    timer.expiresAt = currentTime() + timer.originalValue;
+};
+
+var stopOrRepeatTimer = function (timer) {
+    var checkbox = document.getElementById('repeat');
+
+    if (checkbox.checked) {
+        repeatTimer(timer);
+    } else {
+        stopTimer(timer);
     }
 };
 
@@ -142,8 +149,8 @@ var countdown = function (timer) {
 
         if (seconds <= 0) {
             seconds = 0;
-            stopTimer(timer);
-            //setTimeout(stopTimer, 5000, timer);
+            stopOrRepeatTimer(timer);
+            setTimeout(alarm.stop, 5000, 'expiredTimer');
         }
 
         alarm.play(seconds);
@@ -155,7 +162,8 @@ var countdown = function (timer) {
 
 var startOrPause = function (timer) {
     if (timer.input) {
-        timer.remaining = hhmmssToSeconds(timer.input);
+        timer.originalValue = hhmmssToSeconds(timer.input);
+        timer.remaining = timer.originalValue;
         timer.expiresAt = -1;
         timer.input = '';
     }
@@ -185,6 +193,7 @@ window.onload = function () {
 
     // Timer functionality
     var timer = {
+        originalValue: 5 * 60,
         remaining: 5 * 60,
         expiresAt: -1,
         countdownID: -1,
@@ -193,7 +202,8 @@ window.onload = function () {
     displayTimer(secondsParse(timer.remaining));
     document.addEventListener('keydown', function (e) {
         if (e.keyCode === 13 || e.keyCode === 32) {
-            // Enter key has been pressed, start/pause countdown timer
+            // Enter/space key has been pressed, start/pause countdown timer
+            alarm.stop();
             startOrPause(timer);
         } else if (e.keyCode === 8) {
             // Backspace key pressed, don't go back in browser history
