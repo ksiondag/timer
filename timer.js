@@ -1,11 +1,11 @@
 /*jslint browser: true */
 'use strict';
 var zeroFill = function (length, number) {
-    var number_string = String(number);
-    while (number_string.length < length) {
-        number_string = '0' + number_string;
+    var numberString = String(number);
+    while (numberString.length < length) {
+        numberString = '0' + numberString;
     }
-    return number_string;
+    return numberString;
 };
 
 var twoDigit = function (number) {
@@ -69,11 +69,11 @@ var audioAssets = function () {
     audio = {
         expiredTimer: new Audio('assets/expiredTimer.ogg'),
         //expiredTimer: youtubePlayer(),
-        tenMinutes: new Audio('assets/10m_remaining.ogg'),
-        fiveMinutes: new Audio('assets/5m_remaining.ogg'),
-        oneMinute: new Audio('assets/1m_remaining.ogg'),
-        thirtySeconds: new Audio('assets/30s_remaining.ogg'),
-        finalCountdown: new Audio('assets/final_countdown.ogg')
+        tenMinutes: new Audio('assets/10mRemaining.ogg'),
+        fiveMinutes: new Audio('assets/5mRemaining.ogg'),
+        oneMinute: new Audio('assets/1mRemaining.ogg'),
+        thirtySeconds: new Audio('assets/30sRemaining.ogg'),
+        finalCountdown: new Audio('assets/finalCountdown.ogg')
     };
 
     for (asset in audio) {
