@@ -66,9 +66,10 @@ var displayTimer = function (timer) {
 var audioAssets = function () {
     var audio, asset;
 
+    /*global youtubePlayer: false */
     audio = {
-        expiredTimer: new Audio('assets/expiredTimer.ogg'),
-        //expiredTimer: youtubePlayer(),
+        //expiredTimer: new Audio('assets/expiredTimer.ogg'),
+        expiredTimer: youtubePlayer(),
         tenMinutes: new Audio('assets/10mRemaining.ogg'),
         fiveMinutes: new Audio('assets/5mRemaining.ogg'),
         oneMinute: new Audio('assets/1mRemaining.ogg'),
@@ -137,6 +138,7 @@ var stopOrRepeatTimer = function (timer) {
 
     if (checkbox.checked) {
         repeatTimer(timer);
+        setTimeout(alarm.stop, 5000, 'expiredTimer');
     } else {
         stopTimer(timer);
     }
@@ -150,7 +152,6 @@ var countdown = function (timer) {
         if (seconds <= 0) {
             seconds = 0;
             stopOrRepeatTimer(timer);
-            setTimeout(alarm.stop, 5000, 'expiredTimer');
         }
 
         alarm.play(seconds);

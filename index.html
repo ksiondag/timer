@@ -1,5 +1,6 @@
 <html>
   <head>
+    <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
     <script type="text/javascript" src="youtube.js"></script>
     <script type="text/javascript" src="timer.js"></script>
     <title>
@@ -10,8 +11,6 @@
     <span id="hours"></span>
     <span id="minutes"></span>
     <span id="seconds"></span>
-    <div id="youtubeDIV">
-    </div>
     <div>
       <input type="checkbox" id="tenMinutes">
         Ten minute audio cue
@@ -46,6 +45,13 @@
       <input type="checkbox" id="repeat">
         Restart timer on expiration
       </input>
+    </div>
+    <div>
+      <input type="text" id="youtubeURL">
+        Youtube URL
+      </input>
+    </div>
+    <div id="youtubeDIV">
     </div>
   </body>
 </html>

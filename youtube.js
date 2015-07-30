@@ -1,24 +1,56 @@
+/*jslint browser: true */
+"use strict";
+var controls = {
+    play: function () {
+        return;
+    },
+    pause: function () {
+        return;
+    },
+    load: function () {
+        return;
+    },
+    currentTime: 0
+};
 
-function youtubePlayer () {
+var youtubePlayer = function () {
+    return controls;
+};
 
-    return {
-        playing: false,
-        play: function () {
-            var youtubeDIV = document.getElementById('youtubeDIV')
-            youtubeIframe = '<iframe id="youtubePLayer" width="560" height="315" src="//www.youtube.com/embed/6NcNu7wvfbk?enablejsapi=1&version=3&playerapiid=ytplayer&autoplay=1" frameborder="0" allowfullscreen></iframe>'
-            if (!this.playing) {
-                youtubeDIV.innerHTML = youtubeIframe
-                this.playing = true
-            }
-        },
-        pause: function () {
-            var youtubeDIV = document.getElementById('youtubeDIV')
-            youtubeDIV.innerHTML = ''
-            this.playing = false
-        },
-        load: function () {
-        },
-        currentTime: 0
-    }
-}
 
+var onYouTubeIframeAPIReady = function () {
+    var player;
+
+    /*global YT: false */
+    player = new YT.Player('youtubeDIV', {
+        height: '390',
+        width: '640',
+        videoId: '6NcNu7wvfbk'
+    });
+
+    controls.play = function () {
+        var youtubeURL, videoID, ampersandPosition;
+
+        youtubeURL = document.getElementById('youtubeURL').value;
+
+        if (!youtubeURL || youtubeURL === player.getVideoUrl()) {
+            return player.playVideo();
+        }
+
+        videoID = youtubeURL.split('v=')[1];
+
+        ampersandPosition = videoID.indexOf('&');
+
+        if (ampersandPosition !== -1) {
+            videoID = videoID.substring(0, ampersandPosition);
+        }
+
+        player.loadVideoById(videoID);
+    };
+
+    controls.pause = function () {
+        player.pauseVideo();
+    };
+
+    controls.currentTime = 0;
+};
