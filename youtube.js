@@ -19,13 +19,24 @@ var youtubePlayer = function () {
 
 
 var onYouTubeIframeAPIReady = function () {
-    var player;
+    var player,
+        onPlayerStateChange;
 
-    /*global YT: false */
+    onPlayerStateChange = function (event) {
+        if (event.data === YT.PlayerState.PLAYING) {
+            console.log(event.target.getVideoUrl());
+            document.getElementById('youtubeURL').value = event.target.getVideoUrl();
+        }
+    };
+   
+   /*global YT: false */
     player = new YT.Player('youtubeDIV', {
         height: '390',
         width: '640',
-        videoId: '6NcNu7wvfbk'
+        videoId: '6NcNu7wvfbk',
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
     });
 
     controls.play = function () {
@@ -54,3 +65,6 @@ var onYouTubeIframeAPIReady = function () {
 
     controls.currentTime = 0;
 };
+
+
+
