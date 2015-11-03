@@ -60,7 +60,7 @@ var onYouTubeIframeAPIReady = function () {
     };
 
     controls.pause = function () {
-        player.pauseVideo();
+        //player.pauseVideo();
     };
 
     controls.currentTime = 0;
